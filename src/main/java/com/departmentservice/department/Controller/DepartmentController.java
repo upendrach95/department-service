@@ -7,16 +7,11 @@ import com.departmentservice.department.service.DepartmentService;
 import com.departmentservice.department.shared.DepartmentDto;
 import com.departmentservice.department.shared.Utils;
 import jakarta.validation.Valid;
-import jakarta.validation.ValidationException;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -66,33 +61,19 @@ public class DepartmentController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<DepartmentResponseModel>> searchDepartments(
-            @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "city", required = false) String city,
+    public ResponseEntity<List<DepartmentResponseModel>> searchEmployees(
             @RequestParam(value = "state", required = false) String state,
-            @RequestParam(value = "country", required = false) String country){
-        DepartmentDto department = null;
-        if(name!=null) {
-            department= departmentService.getDepartmentByName(name);
+            @RequestParam(value = "city", required = false) String city) throws NotFoundException {
+        List<DepartmentDto> departments = null;
+        if(state != null && city != null){
+            departments = departmentService.getDepartmentByState(state);
+        }else if(state != null){
+            departments = departmentService.getDepartmentByCity(city);
+        }else if(city != null){
+            departments = departmentService.getDepartmentByCity(city);
         }
-
-        if(department==null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-
-        List<DepartmentResponseModel> departmentsList = new ArrayList<>();
-
-
-        DepartmentResponseModel departmentResponseModel = modelMapper.map(department, DepartmentResponseModel.class);
-        departmentsList.add(departmentResponseModel);
-
-
-        return new ResponseEntity<>(departmentsList, HttpStatus.OK);
+        return new ResponseEntity<>(utils.getDepartmentResponseModelList(departments), HttpStatus.OK);
     }
-
 
     @PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -115,14 +96,14 @@ public class DepartmentController {
 
     @DeleteMapping("/{name}")
     ResponseEntity<Void> delete (@PathVariable String name){
-        if(departmentService.getDepartmentByName(name) == null){
-            throw new ValidationException("Failed to delete, department not found");
+        if ( departmentService.getDepartmentByName(name) == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         boolean res = departmentService.deleteDepartmentByName(name);
         if(res){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        throw new ValidationException("An error occurred while executing request");
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
