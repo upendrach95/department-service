@@ -76,34 +76,16 @@ public class DepartmentServiceImpl implements DepartmentService{
 
     @Override
     public List<DepartmentDto> getDepartmentByCountry(String country){
-        List<DepartmentDto> allDepartments= new ArrayList<>();
         Iterable<DepartmentEntity> departments = departmentRepository.findByCountry(country);
-        ModelMapper modelMapper = new ModelMapper();
-        long count = StreamSupport.stream(departments.spliterator(),false).count();
-        if(count > 0){
-            departments.forEach(departmentEntity -> {
-                DepartmentDto departmentDto = modelMapper.map(departmentEntity,DepartmentDto.class );
-                allDepartments.add(departmentDto);
-            });
-        }
 
-        return allDepartments;
+        return utils.getDepartmentDtoList(departments);
     }
 
     @Override
-    public List<DepartmentDto> getDepartmentByZipCode(Integer zipcode){
-        List<DepartmentDto> allDepartments= new ArrayList<>();
+    public List<DepartmentDto> getDepartmentByZipCode(String zipcode){
         Iterable<DepartmentEntity> departments = departmentRepository.findByZipCode(zipcode);
-        ModelMapper modelMapper = new ModelMapper();
-        long count = StreamSupport.stream(departments.spliterator(),false).count();
-        if(count > 0){
-            departments.forEach(departmentEntity -> {
-                DepartmentDto departmentDto = modelMapper.map(departmentEntity,DepartmentDto.class );
-                allDepartments.add(departmentDto);
-            });
-        }
 
-        return allDepartments;
+        return utils.getDepartmentDtoList(departments);
     }
 
     @Override

@@ -15,7 +15,7 @@ public interface DepartmentRepository extends CrudRepository<DepartmentEntity, L
 
     Iterable<DepartmentEntity> findByCountry(String country);
 
-    Iterable<DepartmentEntity> findByZipCode(Integer zipCode);
+    Iterable<DepartmentEntity> findByZipCode(String zipCode);
 
 
 

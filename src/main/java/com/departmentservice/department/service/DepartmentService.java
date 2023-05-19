@@ -21,5 +21,5 @@ public interface DepartmentService {
 
     List<DepartmentDto> getDepartmentByCity(String city);
 
-    List<DepartmentDto> getDepartmentByZipCode(Integer zipcode);
+    List<DepartmentDto> getDepartmentByZipCode(String zipcode);
 }
