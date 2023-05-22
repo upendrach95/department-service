@@ -61,7 +61,7 @@ public class DepartmentController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<DepartmentResponseModel>> searchEmployees(
+    public ResponseEntity<List<DepartmentResponseModel>> searchDepartments(
             @RequestParam(value = "state", required = false) String state,
             @RequestParam(value = "city", required = false) String city) throws NotFoundException {
         List<DepartmentDto> departments = null;
@@ -77,7 +77,7 @@ public class DepartmentController {
 
     @PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    ResponseEntity<DepartmentResponseModel> updateDepartment(@Valid @RequestBody DepartmentRequestModel departmentDetails) throws NotFoundException {
+    public ResponseEntity<DepartmentResponseModel> updateDepartment(@Valid @RequestBody DepartmentRequestModel departmentDetails) throws NotFoundException {
         String name = departmentDetails.getName();
         if(departmentService.getDepartmentByName(name)==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -95,7 +95,7 @@ public class DepartmentController {
     }
 
     @DeleteMapping("/{name}")
-    ResponseEntity<Void> delete (@PathVariable String name){
+    public ResponseEntity<Void> delete(@PathVariable String name){
         if ( departmentService.getDepartmentByName(name) == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

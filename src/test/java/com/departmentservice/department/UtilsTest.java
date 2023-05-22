@@ -83,13 +83,28 @@ public class UtilsTest {
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage("Department not found");
 
+
+    }
+
+    @Test
+    public void getDepartmentDtoTest() throws NotFoundException {
+        DepartmentRequestModel departmentDetails = new DepartmentRequestModel("name","city","state","country","zip code");
+
+        DepartmentDto departmentDto = utils.getDepartmentDto(departmentDetails);
+
+        assertThat(departmentDto.getName()).isEqualTo(departmentDetails.getName());
+        assertThat(departmentDto.getCity()).isEqualTo(departmentDetails.getCity());
+        assertThat(departmentDto.getState()).isEqualTo(departmentDetails.getState());
+        assertThat(departmentDto.getCountry()).isEqualTo(departmentDetails.getCountry());
+        assertThat(departmentDto.getZipCode()).isEqualTo(departmentDetails.getZipCode());
+
     }
 
     @Test
     public void getDepartmentDtoNotFoundExceptionTest(){
         DepartmentRequestModel departmentDetails = null;
 
-        assertThatThrownBy(() -> utils.getDepartmentDto(departmentDetails))
+        assertThatThrownBy(() -> utils.getDepartmentDto(null))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage("Request object is null");
     }
@@ -109,6 +124,26 @@ public class UtilsTest {
         assertThat(allDepartments.get(0).getState()).isEqualTo(departmentEntity.getState());
         assertThat(allDepartments.get(0).getCountry()).isEqualTo(departmentEntity.getCountry());
         assertThat(allDepartments.get(0).getZipCode()).isEqualTo(departmentEntity.getZipCode());
+
+    }
+
+    @Test
+    public void getDepartmentDtoListExceptionTest(){
+        /*Iterable<DepartmentEntity> departmentEntity = null;
+
+        List<DepartmentDto> allDepartments = utils.getDepartmentDtoList(departmentEntity);
+
+        assertThat(allDepartments.get(0).getName()).isEqualTo(departmentEntity);
+        assertThat(allDepartments.get(0).getCity()).isEqualTo(departmentEntity);
+        assertThat(allDepartments.get(0).getState()).isEqualTo(departmentEntity);
+        assertThat(allDepartments.get(0).getCountry()).isEqualTo(departmentEntity);
+        assertThat(allDepartments.get(0).getZipCode()).isEqualTo(departmentEntity);*/
+
+        DepartmentRequestModel departmentDetails = null;
+
+        assertThatThrownBy(() -> utils.getDepartmentDto(null))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("Request object is null");
 
     }
 }
