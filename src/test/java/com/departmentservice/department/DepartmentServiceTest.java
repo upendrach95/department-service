@@ -149,6 +149,36 @@ public class DepartmentServiceTest {
     }
 
     @Test
+    public void getDepartmentByStateAndCity(){
+        DepartmentDto departmentDto1 = new DepartmentDto(1, "name","city","state","country","zipcode");
+        DepartmentDto departmentDto = new DepartmentDto(2, "name2","city2","state2","country2","zipcode2");
+
+        List<DepartmentDto> departmentDtoList = new ArrayList<>();
+        departmentDtoList.add(departmentDto1);
+        departmentDtoList.add(departmentDto);
+
+        DepartmentEntity departmentEntity = new DepartmentEntity(1, "name","city","state","country","zip code");
+        DepartmentEntity departmentEntity1 = new DepartmentEntity(1, "name","city","state","country","zip code");
+        Iterable<DepartmentEntity> departmentEntities = Arrays.asList(departmentEntity, departmentEntity1);
+
+        String state = "state";
+        String city = "city";
+
+        when(departmentRepository.findByStateAndCity(state, city)).thenReturn(departmentEntities);
+        when(departmentService.getDepartmentByStateAndCity(state, city)).thenReturn(departmentDtoList);
+        when(utils.getDepartmentDtoList(departmentEntities)).thenReturn(departmentDtoList);
+
+        List<DepartmentDto> departmentDtos = departmentService.getDepartmentByStateAndCity(state, city);
+
+        assertThat(departmentDtos.get(0).getName()).isEqualTo(departmentDto1.getName());
+        assertThat(departmentDtos.get(0).getCity()).isEqualTo(departmentDto1.getCity());
+        assertThat(departmentDtos.get(0).getState()).isEqualTo(departmentDto1.getState());
+        assertThat(departmentDtos.get(0).getCountry()).isEqualTo(departmentDto1.getCountry());
+        assertThat(departmentDtos.get(0).getZipCode()).isEqualTo(departmentDto1.getZipCode());
+
+    }
+
+    @Test
     public void getDepartmentByCountry(){
 
         DepartmentDto departmentDto = new DepartmentDto(1, "name","city","state","country","zip code");

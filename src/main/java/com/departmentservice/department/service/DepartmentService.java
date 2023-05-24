@@ -16,6 +16,7 @@ public interface DepartmentService {
     boolean deleteDepartmentByName(String name);
 
     List<DepartmentDto> getDepartmentByState(String state);
+    List<DepartmentDto> getDepartmentByStateAndCity(String state, String city);
 
     List<DepartmentDto> getDepartmentByCountry(String country);
 

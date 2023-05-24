@@ -6,6 +6,7 @@ import com.departmentservice.department.model.DepartmentRequestModel;
 import com.departmentservice.department.model.DepartmentResponseModel;
 import com.departmentservice.department.shared.DepartmentDto;
 import com.departmentservice.department.shared.Utils;
+import jakarta.validation.ValidationException;
 import org.junit.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.runner.RunWith;
@@ -104,7 +105,7 @@ public class UtilsTest {
     public void getDepartmentDtoNotFoundExceptionTest(){
         DepartmentRequestModel departmentDetails = null;
 
-        assertThatThrownBy(() -> utils.getDepartmentDto(null))
+        assertThatThrownBy(() -> utils.getDepartmentDto(departmentDetails))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage("Request object is null");
     }
@@ -129,21 +130,11 @@ public class UtilsTest {
 
     @Test
     public void getDepartmentDtoListExceptionTest(){
-        /*Iterable<DepartmentEntity> departmentEntity = null;
+        Iterable<DepartmentEntity> departmentEntities = Arrays.asList();
 
-        List<DepartmentDto> allDepartments = utils.getDepartmentDtoList(departmentEntity);
-
-        assertThat(allDepartments.get(0).getName()).isEqualTo(departmentEntity);
-        assertThat(allDepartments.get(0).getCity()).isEqualTo(departmentEntity);
-        assertThat(allDepartments.get(0).getState()).isEqualTo(departmentEntity);
-        assertThat(allDepartments.get(0).getCountry()).isEqualTo(departmentEntity);
-        assertThat(allDepartments.get(0).getZipCode()).isEqualTo(departmentEntity);*/
-
-        DepartmentRequestModel departmentDetails = null;
-
-        assertThatThrownBy(() -> utils.getDepartmentDto(null))
-                .isInstanceOf(NotFoundException.class)
-                .hasMessage("Request object is null");
+        assertThatThrownBy(() -> utils.getDepartmentDtoList(departmentEntities))
+                .isInstanceOf(ValidationException.class)
+                .hasMessage("List of entities is null or empty");
 
     }
 }

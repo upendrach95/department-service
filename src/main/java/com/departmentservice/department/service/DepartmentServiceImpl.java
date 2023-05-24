@@ -75,6 +75,12 @@ public class DepartmentServiceImpl implements DepartmentService{
     }
 
     @Override
+    public List<DepartmentDto> getDepartmentByStateAndCity(String state, String city) {
+        Iterable<DepartmentEntity> departments = departmentRepository.findByStateAndCity(state, city);
+
+        return utils.getDepartmentDtoList(departments);
+    }
+    @Override
     public List<DepartmentDto> getDepartmentByCountry(String country){
         Iterable<DepartmentEntity> departments = departmentRepository.findByCountry(country);
 

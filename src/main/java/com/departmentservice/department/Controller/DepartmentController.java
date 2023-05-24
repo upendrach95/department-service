@@ -7,6 +7,7 @@ import com.departmentservice.department.service.DepartmentService;
 import com.departmentservice.department.shared.DepartmentDto;
 import com.departmentservice.department.shared.Utils;
 import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -53,6 +54,11 @@ public class DepartmentController {
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<DepartmentResponseModel> createDepartment(@Valid @RequestBody DepartmentRequestModel departmentDetails) throws NotFoundException {
+        String name = departmentDetails.getName();
+        if(departmentService.getDepartmentByName(name) != null){
+            throw new ValidationException("Provided name already exists");
+        }
+
         DepartmentDto departmentDto = utils.getDepartmentDto(departmentDetails);
 
         DepartmentDto createdValue = departmentService.createDepartment(departmentDto);
@@ -66,9 +72,9 @@ public class DepartmentController {
             @RequestParam(value = "city", required = false) String city) throws NotFoundException {
         List<DepartmentDto> departments = null;
         if(state != null && city != null){
-            departments = departmentService.getDepartmentByState(state);
+            departments = departmentService.getDepartmentByStateAndCity(state, city);
         }else if(state != null){
-            departments = departmentService.getDepartmentByCity(city);
+           departments = departmentService.getDepartmentByState(state);
         }else if(city != null){
             departments = departmentService.getDepartmentByCity(city);
         }
