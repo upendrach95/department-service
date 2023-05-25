@@ -106,9 +106,9 @@ public class DepartmentControllerTest {
                 .andExpect(jsonPath("message", is("Provided name already exists")));
     }
 
-    /*@Test
+    @Test
     public void createDepartmentFieldExceptionTest() throws Exception{
-        DepartmentRequestModel departmentRequestModel = new DepartmentRequestModel("name","city","state","country","zip code");
+        DepartmentRequestModel departmentRequestModel = new DepartmentRequestModel("n","city","state","country","zip code");
 
         DepartmentDto departmentDto = new DepartmentDto(1, "name","city","state","country","zip code");
 
@@ -121,11 +121,12 @@ public class DepartmentControllerTest {
                         .characterEncoding("UTF-8")
                         .content(objectMapper.writeValueAsString(departmentRequestModel)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("status", is("Failed")))
+                //.andExpect(jsonPath("status", is("Failed")))
+                .andExpect(jsonPath("$[0].field",is("name")))
                 .andExpect(jsonPath("$[0].message", is("Name cannot be less than 2 characters")));
 
 
-    }*/
+    }
 
    @Test
     public void createDepartmentPathExceptionTest() throws Exception{

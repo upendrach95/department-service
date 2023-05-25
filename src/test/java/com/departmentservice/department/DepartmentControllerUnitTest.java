@@ -56,6 +56,7 @@ public class DepartmentControllerUnitTest {
         assertThat(responseEntity.getStatusCode().toString()).isEqualTo("200 OK");
     }
 
+
     @Test
     public void getDepartmentByIdTest() throws NotFoundException {
         DepartmentDto departmentDto1 = new DepartmentDto(1, "name","city","state","country","zip code");
@@ -139,35 +140,58 @@ public class DepartmentControllerUnitTest {
     }
 
     @Test
-    public void searchDepartmentByCityTest() throws NotFoundException{
+    public void searchDepartmentTest1() throws NotFoundException{
+        List<DepartmentDto> departmentDtoList = null;
+
+        String state = null;
+        String city = null;
+
+
+        when(utils.getDepartmentResponseModelList(departmentDtoList)).thenThrow(NotFoundException.class);
+
+        try{
+             departmentController.searchDepartments(state,city);
+        }
+        catch(Exception ex) {
+            assertThat(ex).isInstanceOf(NotFoundException.class);
+        }
+    }
+
+    @Test
+    public void searchDepartmentByStateTest() throws NotFoundException{
         DepartmentDto departmentDto1 = new DepartmentDto(1, "name","city","state","country","zip code");
-        DepartmentDto departmentDto = new DepartmentDto(1, "name","city","state","country","zip code");
+        DepartmentDto departmentDto = new DepartmentDto(1, "name","city","state","country","zip code1");
 
         List<DepartmentDto> departmentDtoList = new ArrayList<>();
         departmentDtoList.add(departmentDto);
         departmentDtoList.add(departmentDto1);
 
-        String state = "State";
+        String state = "state";
         String city = null;
-
 
         List<DepartmentResponseModel> departmentList = new ArrayList<>();
         departmentDtoList.forEach(departmentDtoTemp -> {
             DepartmentResponseModel departmentResponseModel = new ModelMapper().map(departmentDtoTemp, DepartmentResponseModel.class);
             departmentList.add(departmentResponseModel);
         });
+        when(departmentService.getDepartmentByState(state)).thenReturn(departmentDtoList);
+        when(utils.getDepartmentResponseModelList(departmentDtoList)).thenReturn(departmentList);
 
-        ResponseEntity<List<DepartmentResponseModel>> responseEntity = departmentController.searchDepartments(city,state);
+        ResponseEntity<List<DepartmentResponseModel>> responseEntity = departmentController.searchDepartments(state,city);
+
 
         List<DepartmentResponseModel> departmentResponseModelList = responseEntity.getBody();
         assertThat(responseEntity.getStatusCode().toString()).isEqualTo("200 OK");
+        assert departmentResponseModelList != null;
+        assertThat(departmentResponseModelList.get(0).getCity()).isEqualTo("city");
+        assertThat(departmentResponseModelList.get(1).getCity()).isEqualTo("city");
 
     }
 
     @Test
-    public void searchDepartmentByStateTest() throws NotFoundException{
+    public void searchDepartmentByCityTest() throws NotFoundException{
         DepartmentDto departmentDto1 = new DepartmentDto(1, "name","city","state","country","zip code");
-        DepartmentDto departmentDto = new DepartmentDto(1, "name","city","state","country","zip code");
+        DepartmentDto departmentDto = new DepartmentDto(1, "name","city","state","country","zip code1");
 
         List<DepartmentDto> departmentDtoList = new ArrayList<>();
         departmentDtoList.add(departmentDto);
@@ -176,18 +200,22 @@ public class DepartmentControllerUnitTest {
         String state = null;
         String city = "city";
 
-
         List<DepartmentResponseModel> departmentList = new ArrayList<>();
         departmentDtoList.forEach(departmentDtoTemp -> {
             DepartmentResponseModel departmentResponseModel = new ModelMapper().map(departmentDtoTemp, DepartmentResponseModel.class);
             departmentList.add(departmentResponseModel);
         });
+        when(departmentService.getDepartmentByCity(city)).thenReturn(departmentDtoList);
+        when(utils.getDepartmentResponseModelList(departmentDtoList)).thenReturn(departmentList);
 
-        ResponseEntity<List<DepartmentResponseModel>> responseEntity = departmentController.searchDepartments(city,state);
+        ResponseEntity<List<DepartmentResponseModel>> responseEntity = departmentController.searchDepartments(state,city);
+
 
         List<DepartmentResponseModel> departmentResponseModelList = responseEntity.getBody();
         assertThat(responseEntity.getStatusCode().toString()).isEqualTo("200 OK");
-
+        assert departmentResponseModelList != null;
+        assertThat(departmentResponseModelList.get(0).getCity()).isEqualTo("city");
+        assertThat(departmentResponseModelList.get(1).getCity()).isEqualTo("city");
     }
 
     @Test
